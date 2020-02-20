@@ -13,22 +13,42 @@ def t_COUNT(t):
     t.value = int(t.value)
     return t
 
-def t_error(t):
-    raise TypeError("Unknown text '%s'" % (t.value,))
+error_occured = False
 
-#getting user input
-data = ""
-print("INput from keyboard:")
-while True:
-    text = input()
-    if text == "#":
-        break
-    else:
-        data +=text +'\n'
+def t_error(t):
+    print("Illegal character '%s'" % t.value[0])
+    global error_occured
+    error_occured = True
+    t.lexer.skip(1)
+
+        
 # Build the lexer
 lexer = lex.lex()
- #Give the lexer user input
-lexer.input(data)  
 
-for tok in iter(lex.token, None):
-    print (repr(tok.type), repr(tok.value))
+def main():
+    #getting user input
+    data = []
+    global error_occured
+    print("Input from keyboard:")
+    while True:
+        text = input()
+        if text == "#":
+            break
+        else:
+            data.append(text)
+
+    for item in data:
+        print("processing ", item)
+        #Give the lexer user input
+        lexer.input(item)
+        sum = 0
+        for tok in iter(lex.token, None):
+            if error_occured: break
+            sum = sum + repr(tok.value)
+        if error_occured:
+            print("Error in formula")
+        else: print (sum)
+        error_occured = False
+        
+if __name__ == "__main__":
+    main()
