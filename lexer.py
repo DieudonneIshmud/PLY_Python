@@ -29,14 +29,14 @@ def t_NAME(t):
 
  # Error handling rule
  #The t_error() function is used to handle lexing errors that occur when illegal characters are detected
+error_occured = False
 def t_error(t):
-     print("Illegal character '%s'" % t.value[0])
+     global error_occured
+     error_occured = True
      t.lexer.skip(1)
 
 #variable that holds input data
 data = ""
-
-print("INput from keyboard:")
 while True:
     text = input()
     if text == "#":
@@ -46,13 +46,33 @@ while True:
 # Build the lexer
 lexer = lex.lex()
  #Give the lexer user input
-lexer.input(data)      
+lexer.input(data)
 
+
+def getType(tokType):
+    if tokType == 'EQUALS':
+        return '='
+    elif tokType == 'PLUS':
+        return '+'
+    elif tokType == 'LPAREN':
+        return '('
+    elif tokType == 'RPAREN':
+        return ')'
+    else: return tok.type
 # Tokenize
 while True:
     tok = lexer.token()
     if not tok:
         break      # No more input
-    print(("'"+tok.type+"'"),("'"+tok.value+"'"), ("'"+tok.lineno+"'"), ("'"+ tok.lexpos+"'"))
+    type = getType(tok.type)
+    if error_occured:
+        print('Illegal character \'', tok.value,'\'', sep='')
+    else:
+        print('(\'',type,'\'', sep='', end=', ')
+        if not type == 'NUMBER':
+            print ('\'', tok.value, '\'', sep='', end=', ')
+        else:
+            print (tok.value,  end=', ')
+        print( tok.lineno, tok.lexpos, sep=', ', end=')\n')
+    error_occured = False
     #print(tok)
-
