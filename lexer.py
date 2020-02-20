@@ -33,26 +33,30 @@ def t_error(t):
      print("Illegal character '%s'" % t.value[0])
      t.lexer.skip(1)
 
-#variable that holds input data
-data = ""
 
-print("INput from keyboard:")
-while True:
-    text = input()
-    if text == "#":
-        break
-    else:
-        data +=text +'\n'
 # Build the lexer
 lexer = lex.lex()
- #Give the lexer user input
-lexer.input(data)      
+def main():
+    #variable that holds input data
+    data = ""
+    print("Input from keyboard:")
+    while True:
+        text = input()
+        if text == "#":
+            break
+        else:
+            data +=text +'\n'
+    
+     #Give the lexer user input
+    lexer.input(data)      
 
-# Tokenize
-while True:
-    tok = lexer.token()
-    if not tok:
-        break      # No more input
-    print(("'"+tok.type+"'"),("'"+tok.value+"'"), ("'"+tok.lineno+"'"), ("'"+ tok.lexpos+"'"))
-    #print(tok)
+    # Tokenize
+    while True:
+        tok = lexer.token()
+        if not tok:
+            break      # No more input
+        print(tok.type,tok.value, tok.lineno, tok.lexpos)
+        #print(tok)
 
+if __name__ == "__main__":
+    main()
