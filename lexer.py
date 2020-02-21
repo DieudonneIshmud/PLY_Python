@@ -26,12 +26,15 @@ def t_NAME(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     t.value = t.value
     return t
- 
+
+ # Error handling rule
  #The t_error() function is used to handle lexing errors that occur when illegal characters are detected
-# Error handling rule
+#error_occured = False
 def t_error(t):
-        print("Illegal character '%s'" % t.value[0])
-        t.lexer.skip(1)    
+    print("Illegal character '%s'" % t.value[0])
+    t.lexer.skip(1)
+     #global error_occured
+     #error_occured = True
 # Build the lexer
 lexer = lex.lex()
 
@@ -66,6 +69,8 @@ def main():
         if not tok:
             break      # No more input
         
+            #if error_occured:
+            #print('Illegal character \'', tok.value,'\'', sep='')
         else:
             type = getType(tok.type)
             print('(\'',type,'\'', sep='', end=', ')
@@ -74,7 +79,7 @@ def main():
             else:
                 print (tok.value,  end=', ')
             print( tok.lineno, tok.lexpos, sep=', ', end=')\n')
-        #error_occured = False
+        error_occured = False
         #print(tok)
 if __name__ == "__main__":
     main()
