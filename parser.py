@@ -1,11 +1,9 @@
 import ply.yacc as yacc
 
 from lexer import tokens
-
+import lexer
 
 names = {}
-error_occured = False
-
 
 def p_expression_plus(p):
     'expression : expression PLUS expression'
@@ -13,7 +11,7 @@ def p_expression_plus(p):
 
 def p_expression_paren(p):
     'expression : LPAREN expression RPAREN'
-    p[0] = (p[1])
+    p[0] = (p[2])
     
 def p_expression_equals(p):
     'expression : NAME EQUALS expression'
@@ -29,21 +27,19 @@ def p_expression_name(p):
     try:
         p[0] = names[p[1]]
     except LookupError:
-        global error_occured
-        error_occured = True
+        from lexer import error_occured
+        lexer.error_occured = True
         p[0] = 0
   
     
 # Error rule for syntax errors
 def p_error(p):
-    global error_occured
-    error_occured = True
+    lexer.error_occured = True
  #the debug and errorlog arguments helps avoind warning, which cause problems with the automarker
 parser = yacc.yacc(debug=False,errorlog=yacc.NullLogger())
 
 x = []
 def main():
-
     while (True):
         try:
             s = input()
@@ -56,8 +52,9 @@ def main():
         x.append(s)
     for s in x:
         parser.parse(s)
+        if lexer.error_occured: break
         #print(result)
-    if error_occured:
+    if lexer.error_occured:
         print('Error in input')
     else:
         print('Accepted')
