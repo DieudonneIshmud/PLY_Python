@@ -29,12 +29,15 @@ def t_NAME(t):
 
  # Error handling rule
  #The t_error() function is used to handle lexing errors that occur when illegal characters are detected
-#error_occured = False
+error_occured = False
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
+    if __name__ == '__main__':
+        print("Illegal character '%s'" % t.value[0])
+    else:
+        global error_occured
+        error_occured = True
     t.lexer.skip(1)
-     #global error_occured
-     #error_occured = True
+    
 # Build the lexer
 lexer = lex.lex()
 

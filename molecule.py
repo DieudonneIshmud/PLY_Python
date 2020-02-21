@@ -16,20 +16,45 @@ def t_COUNT(t):
 error_occured = False
 
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
+    print("here")
     global error_occured
     error_occured = True
     t.lexer.skip(1)
 
-        
 # Build the lexer
 lexer = lex.lex()
+
+#beginning of the parser
+import ply.yacc as yacc
+
+count = 0
+
+def p_expression_count(p):
+    'expression : SYMBOL COUNT expression'
+    global count
+    count = count + p[2]
+
+def p_expression_symbol(p):
+    'expression : SYMBOL expression'
+    global count
+    count = count + 1
+
+def p_expression_symbCount(p):
+    'expression : '
+    pass
+
+# Error rule for syntax errors
+def p_error(p):
+    global error_occured
+    error_occured = True
+
+
+parser = yacc.yacc(debug=False,errorlog=yacc.NullLogger())
 
 def main():
     #getting user input
     data = []
-    global error_occured
-    print("Input from keyboard:")
+    global count, error_occured
     while True:
         text = input()
         if text == "#":
@@ -38,16 +63,12 @@ def main():
             data.append(text)
 
     for item in data:
-        print("processing ", item)
+        count = 0
         #Give the lexer user input
-        lexer.input(item)
-        sum = 0
-        for tok in iter(lex.token, None):
-            if error_occured: break
-            sum = sum + repr(tok.value)
+        parser.parse(item)
         if error_occured:
             print("Error in formula")
-        else: print (sum)
+        else: print (count)
         error_occured = False
         
 if __name__ == "__main__":
