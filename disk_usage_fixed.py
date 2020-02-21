@@ -14,7 +14,7 @@ def check_disk_usage(disk, min_absolute,min_percent):
 
 # Check for at least 2 GB and 10% free
 #if not check_disk_usage("/",2*2**30,10):  # something wrong since we are doing the gigabyte conversion twice --ref Line 10
-if not check_disk_usage("/",2,10):  
+if not check_disk_usage("/",2,10):          #corrected
     print ("ERROR : Not enough disk space")
     sys.exit(1)
 print ("Everything is OKAY")
